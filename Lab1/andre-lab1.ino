@@ -23,17 +23,25 @@
 //timer1 will interrupt at 1Hz
 
 //storage variables
-boolean toggle1 = 0;
 const byte buttonInterruptPin = 2;
-const byte ledpin = 9;
-volatile byte buttonPressed = LOW;
-
+const byte GREEN_LED = 9;
+const byte YELLOW_LED = 9;
+const byte RED_LED = 9;
+volatile byte buttonPressed = 0;
+unsigned long blinkInterval = 500; // 0.5 seconds
+unsigned long greenInterval = 20000; // 20 seconds
+unsigned long yellowInterval = 3000; // 3 seconds
+unsigned long redInterval = 24000; // 24 seconds
+volatile byte red_flag = 0; //determine if in red light state
+volatile byte green_flag = 0; //determine if in green light state
+volatile byte blink_state = 0;
+unsigned long blink_duration = 3000;
 void setup(){
   
   //set pins as outputs
-  pinMode(ledpin, OUTPUT);
+  pinMode(9, OUTPUT);
   pinMode(buttonInterruptPin, INPUT);
-  attachInterrupt(digitalPinToInterrupt(buttonInterruptPin), solidState, RISING); //initiates button interrupt (pin to watch for interrupt, function to execute on interrupt, when interrupt should trigger[i.e. rising, falling, high, low])
+  attachInterrupt(digitalPinToInterrupt(buttonInterruptPin), ISR_button, RISING); //initiates button interrupt (pin to watch for interrupt, function to execute on interrupt, when interrupt should trigger[i.e. rising, falling, high, low])
 
   cli();//stop interrupts
 
@@ -50,9 +58,50 @@ void setup(){
   // enable timer compare interrupt
   TIMSK1 |= (1 << OCIE1A);
 
+
   sei();//allow interrupts
 
 }//end setup
+
+
+void loop(){
+  if(buttonPressed){
+    unsigned long currentMillis = 0;
+    OCR1A = 31249; //(16*10^6) / (0.5*1024) - 1, change register to reflect 0.5 second intervals after button pressed
+
+    //turn red on 24 seconds, blink/buzz last 3 seconds
+    do{
+      currentMillis = millis();
+      digitalWrite(RED_LED, HIGH);
+
+      if((millis()- currentMillis) - redInterval <= blink_duration){
+        //turn on buzzer here
+        digitalWrite(RED_LED, blink_state); 
+      }
+    }while(millis() - currentMillis < redInterval);
+    digitalWrite(RED_LED, LOW);
+
+    //turn green on 20 seconds, blink/buzz last 3 seconds
+    do{
+      currentMillis = millis();
+      digitalWrite(GREEN_LED, HIGH);
+
+      if((millis()- currentMillis) - greenInterval <= blink_duration){
+        //turn on buzzer here
+        digitalWrite(GREEN_LED, blink_state); 
+      }
+    }while(millis() - currentMillis < greenInterval);
+    digitalWrite(GREEN_LED, LOW);
+
+    //turn yellow on 3 seconds
+    do{
+      currentMillis = millis();
+      digitalWrite(YELLOW_LED, HIGH);
+    }while(millis() - currentMillis < yellowInterval);
+    digitalWrite(YELLOW_LED, LOW);
+  }
+  
+}
 
 // Timer1's interrupt service routing (ISR)
 // The code in ISR will be executed every time timer1 interrupt occurs
@@ -61,30 +110,11 @@ void setup(){
 //   you need to set a flag to trigger an evaluation of the conditions
 //   in your buttonPressed machine, then potentially transit to next buttonPressed
 //
-ISR(TIMER1_COMPA_vect){//timer1 interrupt 1Hz toggles pin 13 (LED)
+ISR(TIMER1_COMPA_vect){//timer1 interrupt 1Hz toggles pin 9 (LED)
 //generates pulse wave of frequency 1Hz/2 = 0.5kHz (takes two cycles for full wave- toggle high then toggle low)
-  if (toggle1){
-    digitalWrite(ledpin,HIGH);
-    toggle1 = 0;
-  }
-  else{
-    digitalWrite(ledpin,LOW);
-    toggle1 = 1;
-  }
+  blink_state ^ 1;
 }
-void solidState(){
-    buttonPressed = !buttonPressed;
-}
-void loop(){
-  //do other things here
-  if(buttonPressed){
-    //do stuff here when button pressed
-    digitalWrite(ledpin, HIGH);
-  }
-  else{
-    if (toggle1) {
-    }
-    else {
-    }
-  }
+
+void ISR_button(){
+  buttonPressed ^ 1;
 }
