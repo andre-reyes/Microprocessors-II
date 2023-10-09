@@ -46,7 +46,6 @@ enum light_states {
 
 //storage variables
 boolean toggle1 = 0;
-//
 volatile bool buttonPressed = false;
 
 volatile unsigned int seconds_left = 0;
@@ -57,7 +56,7 @@ volatile byte current_light = red_ledpin;
 volatile byte light_state = HIGH;
 
 void setup(){
-  Serial.begin(9600);
+  //Serial.begin(9600);
   //set pins as outputs
   pinMode(red_ledpin, OUTPUT);
   pinMode(yellow_ledpin, OUTPUT);
@@ -74,7 +73,7 @@ void setup(){
   TCCR1A = 0;// set entire TCCR1A register to 0
   TCCR1B = 0;// same for TCCR1B
   TCNT1  = 0;//initialize counter value to 0
-  // set compare match register for 1hz increments
+  // set compare match register for 2hz increments
   OCR1A = 7812;// = (16*10^6) / (1*1024) - 1 (must be <65536)
   // turn on CTC mode
   TCCR1B |= (1 << WGM12);
@@ -89,13 +88,13 @@ void setup(){
 
 // Timer1's interrupt service routing (ISR)
 // The code in ISR will be executed every time timer1 interrupt occurs
-// That is, the code will be called once every second
+// That is, the code will be called once every half second
 // TODO
 //   you need to set a flag to trigger an evaluation of the conditions
 //   in your buttonPressed machine, then potentially transit to next buttonPressed
 //
-ISR(TIMER1_COMPA_vect){//timer1 interrupt 1Hz toggles pin 13 (LED)
-//generates pulse wave of frequency 1Hz/2 = 0.5kHz (takes two cycles for full wave- toggle high then toggle low)
+ISR(TIMER1_COMPA_vect){//timer1 interrupt 2Hz, downsteps to 1hz
+//generates pulse wave of frequency 2Hz/2 = 1Hz (based on timer interopts being raised))
   
   if (toggle1){
     //Serial.println("Toggle reset low");
@@ -108,7 +107,7 @@ ISR(TIMER1_COMPA_vect){//timer1 interrupt 1Hz toggles pin 13 (LED)
 
     if(seconds_left <= FLASHING_START_TIME && (this_state == red || this_state == green)) {
       //Serial.println("Flash low");
-      digitalWrite(current_light, LOW);
+      digitalWrite(current_light, HIGH);
     }
   }
   else{
@@ -116,6 +115,7 @@ ISR(TIMER1_COMPA_vect){//timer1 interrupt 1Hz toggles pin 13 (LED)
     
     //Serial.println("Toggle reset HIGH");
 
+    //Reset state. only change on button interupt
     if (this_state == reset) {
       //Serial.println("Changing light state...");
       
@@ -129,20 +129,22 @@ ISR(TIMER1_COMPA_vect){//timer1 interrupt 1Hz toggles pin 13 (LED)
       return;
     } 
     
-    seconds_left--;
-
-    if (seconds_left < FLASHING_START_TIME && (this_state == red || this_state == green)) {
-      //Serial.println("Flash High");
-      digitalWrite(current_light, HIGH);
-    }
-    
-    if (seconds_left < BUZZER_ACTIVATION_TIME) {
-      activate_buzzer();
-    } 
+    // Change state
     if (seconds_left == 0) {
       deactivate_buzzer();
       set_next_state();
     }
+    //Evaluate if flashing light should occur
+    if (seconds_left <= FLASHING_START_TIME && (this_state == red || this_state == green)) {
+      //Serial.println("Flash Low");
+      digitalWrite(current_light, LOW);
+    }
+    //Evaluate if buzzer should be activated
+    if (seconds_left == BUZZER_ACTIVATION_TIME) {
+      activate_buzzer();
+    } 
+
+    seconds_left--;
   }
 }
 
