@@ -1,6 +1,5 @@
-// timer interrupt sample
-// yluo modified for lab1 of EECE.4520/5520
-// 9/12/2021
+// Andre Reyes, Conor Duston and Harrington Idahosa modified for Lab 1 - Traffic Light Controller of EECE.4520/5520
+// 10/9/2023
 //
 // original source:-
 //timer interrupts
@@ -20,7 +19,7 @@
 //For arduino uno or any board with ATMEL 328/168.. diecimila, duemilanove, lilypad, nano, mini...
 
 //this code will enable one arduino timer interrupt
-//timer1 will interrupt at 1Hz
+//timer1 will interrupt at 2Hz
 
 //Definitions for timer change points
 //Time is given in seconds
@@ -74,7 +73,7 @@ void setup(){
   TCCR1B = 0;// same for TCCR1B
   TCNT1  = 0;//initialize counter value to 0
   // set compare match register for 2hz increments
-  OCR1A = 7812;// = (16*10^6) / (1*1024) - 1 (must be <65536)
+  OCR1A = 7812;// = (16*10^6) / (2*1024) - 1 (must be <65536)
   // turn on CTC mode
   TCCR1B |= (1 << WGM12);
   // Set CS12 and CS10 bits for 1024 prescaler
@@ -119,12 +118,7 @@ ISR(TIMER1_COMPA_vect){//timer1 interrupt 2Hz, downsteps to 1hz
     if (this_state == reset) {
       //Serial.println("Changing light state...");
       
-      if (light_state == LOW) {
-        light_state = HIGH;
-      } else {
-        light_state = LOW;
-      }
-
+      light_state ^= 1;
       digitalWrite(red_ledpin, light_state);
       return;
     } 
@@ -151,17 +145,8 @@ ISR(TIMER1_COMPA_vect){//timer1 interrupt 2Hz, downsteps to 1hz
 
 
 void loop(){
-  //do other things here
-  if(buttonPressed){
-    //do stuff here when button pressed
-    
-  }
-  else{
-    if (toggle1) {
-    }
-    else {
-    }
-  }
+  // Empty. 
+  // Required by Arduino IDE, entire program controlled by Timer/button interrupts
 }
 
 void solidState(){
