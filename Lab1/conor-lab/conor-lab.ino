@@ -118,7 +118,7 @@ ISR(TIMER1_COMPA_vect){//timer1 interrupt 2Hz, downsteps to 1hz
     if (this_state == reset) {
       //Serial.println("Changing light state...");
       
-      light_state ^= 1;
+      light_state ^= 1; // XOR'd to switch value between 0 and 1
       digitalWrite(red_ledpin, light_state);
       return;
     } 
