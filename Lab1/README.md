@@ -1,4 +1,4 @@
-# Lab 1
+# Lab 1 - Traffic Light Controller
 The purpose of this lab is to design a controller for traffic lights that face one traffic direction. The system will start up in a red flashing, pending, mode. Once a button is pressed, The program will rotate between solid red, green and yellow lights to imitate a traffic controller. 
 
 ## Folder Structure
