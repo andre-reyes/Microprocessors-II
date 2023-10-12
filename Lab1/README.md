@@ -3,8 +3,13 @@
 
 ## Folder Structure
 ```
-Lab1/
-    traffic_light.ino   Arduino program
+traffic_light.ino       Arduino program
+Schematic/
+    arduino_setup.pdf   simulated breadboard design
+    irl circuit.jpg     picture of circuit design
+    schematic.pdf       circuit schematic design using fritzing
+    schematic.fzz       .fzz files used with fritzing (ver. 1.0.1) for schematic
+
 ```
 
 ## Components Used:
