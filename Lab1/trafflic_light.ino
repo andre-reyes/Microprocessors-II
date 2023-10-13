@@ -55,7 +55,6 @@ volatile byte current_light = red_ledpin;
 volatile byte light_state = HIGH;
 
 void setup(){
-  //Serial.begin(9600);
   //set pins as outputs
   pinMode(red_ledpin, OUTPUT);
   pinMode(yellow_ledpin, OUTPUT);
@@ -96,27 +95,22 @@ ISR(TIMER1_COMPA_vect){//timer1 interrupt 2Hz, downsteps to 1hz
 //generates pulse wave of frequency 2Hz/2 = 1Hz (based on timer interopts being raised))
   
   if (toggle1){
-    //Serial.println("Toggle reset low");
     toggle1 = 0;
     
     if (this_state == reset) {
-      //Serial.println("State is reset, doing nothing");
       return;
     }
 
     if(seconds_left <= FLASHING_START_TIME && (this_state == red || this_state == green)) {
-      //Serial.println("Flash low");
       digitalWrite(current_light, HIGH);
     }
   }
   else{
     toggle1 = 1;
     
-    //Serial.println("Toggle reset HIGH");
 
     //Reset state. only change on button interupt
     if (this_state == reset) {
-      //Serial.println("Changing light state...");
       
       light_state ^= 1; // XOR'd to switch value between 0 and 1
       digitalWrite(red_ledpin, light_state);
@@ -130,7 +124,6 @@ ISR(TIMER1_COMPA_vect){//timer1 interrupt 2Hz, downsteps to 1hz
     }
     //Evaluate if flashing light should occur
     if (seconds_left <= FLASHING_START_TIME && (this_state == red || this_state == green)) {
-      //Serial.println("Flash Low");
       digitalWrite(current_light, LOW);
     }
     //Evaluate if buzzer should be activated
@@ -151,7 +144,6 @@ void loop(){
 
 void solidState(){
     if ( buttonPressed == false) {
-        Serial.println("Button Pressed once");
         buttonPressed = true;
         set_next_state();
     }
