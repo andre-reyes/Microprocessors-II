@@ -1,5 +1,5 @@
 changelog: 
-10/16/23: 
+10/16/23
  - setup lab2 files, tested Yan Luo's example and succeeded in getting a serial connection
  - connected joystick and implemented a basic code structure using analogRead() in order to gain an 
      understanding of joystick diresction values. 0-1024 hovering around 500

@@ -1,12 +1,10 @@
-# pyserial-test.py
+# andre-pyserial.py
 # test serial communication with Arduino
 #
 # require pip install pyserial
 #
 # Usage: python3 pyserial-test.py
-#
-# yluo
-#
+
 import serial 
 
 # serial port dev file name
