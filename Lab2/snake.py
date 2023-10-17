@@ -8,14 +8,16 @@
 import turtle
 import time
 import random
+
 # TODO uncomment the following line to use pyserial package
-#import serial
+import serial
 
 # Note the serial port dev file name
 # need to change based on the particular host machine
 # TODO uncomment the following two lines to initialize serial port
 #serialDevFile = '/dev/cu.usbmodem14201'
-#ser=serial.Serial(serialDevFile, 9600, timeout=0)
+serialDevFile = 'COM3' # Andre's windows port
+ser=serial.Serial(serialDevFile, 9600, timeout=0)
 
 delay = 0.1
 
@@ -115,6 +117,9 @@ while True:
     #     head.direction = "down"
     # elif ......
     #
+    
+ 
+
 
     # Check for a collision with the border
     if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:
