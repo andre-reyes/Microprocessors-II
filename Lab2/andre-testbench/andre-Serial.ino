@@ -1,4 +1,5 @@
-
+// Start of Serial read: reads if snake ate apple from snake.py
+// and write: sends joystick direction to snake.py
 
 #define joystick_x A0
 #define joystick_y A1
@@ -56,7 +57,5 @@ void loop() {
   else if(abs(x_dir - joystick_center) > resting_threshold){
     Serial.println("d");
   }
-  else{
-    break;
-  }
+  delay(100);
 }
