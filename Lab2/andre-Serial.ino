@@ -1,14 +1,4 @@
-// changelog: 
-// 10/16/23: 
-//  - setup lab2 files, tested Yan Luo's example and succeeded in getting a serial connection
-//  - connected joystick and implemented a basic code structure using analogRead() in order to gain an 
-//      understanding of joystick diresction values. 0-1024 hovering around 500
-//  - values varied at center so a threshold was created, the idea splitting each direction into 4 
-//      where only the most extreme changes (at least a 25% change) will register a direction input
-//  - conditions were then added to an if/else statement to determine the direction and ouputs it
-//       in the form of a letter to the arduino serial, which is the read by andre-pyserial.py
-//  - andre-pyserial.py was added as a test bench for just the serial communication between the
-//      arduino and pc. the base of this code was taken from snake.py movement functions
+
 
 #define joystick_x A0
 #define joystick_y A1
@@ -67,6 +57,6 @@ void loop() {
     Serial.println("d");
   }
   else{
-    Serial.println("");
+    break;
   }
 }

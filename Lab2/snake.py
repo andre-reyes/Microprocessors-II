@@ -107,6 +107,42 @@ wn.onkey(go_right, "d")
 while True:
     wn.update()
 
+    # ************************ ADDED BY ANDRE - BEGIN ************************
+    # reads serial in binary, decodes from binary literal to utf-8 and strips trailing whitespace
+    # this ensures only one character is read and compared to conditonally
+
+    joystick_position = ser.readline().decode('UTF-8').rstrip()
+  
+    match joystick_position:
+        case 'w':
+            go_up()
+        case "s":
+            go_down()
+        case "a":
+            go_left()
+        case "d":
+            go_right()
+        case _:
+            # do nothing
+            pass
+
+    # TODO: 
+    #   probably a better way to flush any data in buffer after first character read..
+    #   This is just the first method that worked
+    #
+    #   this statement basically makes it so that it will load ALL leftover buffer to remove it
+    #   from the queue
+    #  
+    #   otherwise without this the joystick_position will read dupes in buffer one by one
+    #   alternative idea is to modify arduino code to ensure only one input is sent at a time, especially
+    #   if it is the same direction.
+    if ser.in_waiting:
+        ser.read_all() 
+
+
+
+    # ************************ ADDED BY ANDRE - END ************************
+
     # TODO: notes by Prof. Luo
     # you need to add your code to read control information from serial port
     # then use that information to set head.direction
@@ -118,7 +154,6 @@ while True:
     # elif ......
     #
     
- 
 
 
     # Check for a collision with the border
