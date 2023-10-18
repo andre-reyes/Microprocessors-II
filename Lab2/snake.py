@@ -109,7 +109,7 @@ while True:
 
     # ************************ ADDED BY ANDRE - BEGIN ************************
     # reads serial in binary, decodes from binary literal to utf-8 and strips trailing whitespace
-    # this ensures only one character is read and compared to conditonally
+    # this ensures only one character is read and compared to the switch/case statement
 
     joystick_position = ser.readline().decode('UTF-8').rstrip()
   
@@ -123,7 +123,7 @@ while True:
         case "d":
             go_right()
         case _:
-            # do nothing
+            # do nothing otherwise
             pass
 
     # TODO: 

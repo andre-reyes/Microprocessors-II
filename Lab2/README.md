@@ -9,6 +9,7 @@ changelog:
       in the form of a letter to the arduino serial, which is the read by andre-pyserial.py
  - andre-pyserial.py was added as a test bench for just the serial communication between the
      arduino and pc. the base of this code was taken from snake.py movement functions
+     
  * working joystick code added to snake.py
    * similar in function to andre-Serial except with condition to handle excess readings in buffer
    * lots of issues with finding a way to flush buffer, solution I found was to read_all() so that it removes from buffer
