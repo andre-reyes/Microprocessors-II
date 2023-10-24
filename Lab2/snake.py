@@ -126,11 +126,11 @@ while True:
             # do nothing otherwise
             pass
 
-    # TODO: 
+    # TODO: notes by Andre
     #   probably a better way to flush any data in buffer after first character read..
     #   This is just the first method that worked
     #
-    #   this statement basically makes it so that it will load ALL leftover buffer to remove it
+    #   this next statement basically makes it so that it will load ALL leftover buffer to remove it
     #   from the queue
     #  
     #   otherwise without this the joystick_position will read dupes in buffer one by one
@@ -152,7 +152,7 @@ while True:
     # elif control_information == 's':
     #     head.direction = "down"
     # elif ......
-    #
+    # COMPLETED for joystick - Andre
     
 
 

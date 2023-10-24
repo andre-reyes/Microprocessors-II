@@ -23,6 +23,7 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
+  // TODO: uncomment this to receive snake game serial output.
   // read from the Serial port:
   // if (Serial.available() > 0) {
   //   // read the incoming byte:
@@ -38,7 +39,7 @@ void loop() {
 
   x_dir = analogRead(joystick_x);
   y_dir = analogRead(joystick_y);
-
+  // the following serial.prints only used for gaining joystick movement data
   // Serial.print("x = ");
   // Serial.print(x_dir);
   // Serial.print(", y = ");
