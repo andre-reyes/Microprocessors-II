@@ -1,5 +1,5 @@
 // Start of Serial read: reads if snake ate apple from snake.py
-// and write: sends joystick direction to snake.py
+// and write: sends joystick new_direction to snake.py
 
 #define joystick_x A0
 #define joystick_y A1
@@ -9,7 +9,8 @@ int joystick_center = analog_range/2;
 int x_dir = 0;
 int y_dir = 0;
 int incomingByte = 0; 
-
+char new_direction = "";
+char old_direction = "";
 // the setup routine runs once when you press reset:
 void setup() {
   // initialize serial communication at 9600 bits per second:
@@ -23,7 +24,6 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
-  // TODO: uncomment this to receive snake game serial output.
   // read from the Serial port:
   // if (Serial.available() > 0) {
   //   // read the incoming byte:
@@ -39,7 +39,7 @@ void loop() {
 
   x_dir = analogRead(joystick_x);
   y_dir = analogRead(joystick_y);
-  // the following serial.prints only used for gaining joystick movement data
+
   // Serial.print("x = ");
   // Serial.print(x_dir);
   // Serial.print(", y = ");
@@ -47,16 +47,20 @@ void loop() {
   // delay(200);
   
   if(y_dir - joystick_center > resting_threshold){
-    Serial.println("w");
+    new_direction = 'w';
   }
   else if(abs(y_dir - joystick_center) > resting_threshold){
-    Serial.println("s");
+    new_direction = 's';
   }
   else if(x_dir - joystick_center > resting_threshold){
-    Serial.println("a");
+    new_direction = 'a';
   }
   else if(abs(x_dir - joystick_center) > resting_threshold){
-    Serial.println("d");
+    new_direction = 'd';
+  }
+  if(old_direction != new_direction){
+    old_direction = new_direction;
+    Serial.println(new_direction);
   }
   delay(100);
 }
