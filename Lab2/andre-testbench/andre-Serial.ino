@@ -4,7 +4,7 @@
 #define joystick_x A0
 #define joystick_y A1
 #define analog_range 1024 // general range of the analog input of arduino
-int resting_threshold = analog_range/4; //values within 25% of resting value of 500
+int resting_threshold = analog_range/4; // "deadzone" around joystick at rest, 25% all around
 int joystick_center = analog_range/2; // at rest joystick hovers around 500
 int joystick_x_dir = 0; // x value of joystick (left: -1024 to -750, right: 750 to 1024)
 int joystick_y_dir = 0; // y value of joystick (down: -1024 to -750, up: 750 to 1024)
@@ -25,7 +25,7 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
-  // read from the Serial port:
+  // TODO: Uncomment to read from the Serial port:
   // if (Serial.available() > 0) {
   //   // read the incoming byte:
   //   incomingByte = Serial.read();
@@ -39,7 +39,7 @@ void loop() {
   // }
 
 
-  // read joystick values and handle non-repeat ouput
+  // read joystick values and prevent repeated output
   joystick_x_dir = analogRead(joystick_x);
   joystick_y_dir = analogRead(joystick_y);
 
