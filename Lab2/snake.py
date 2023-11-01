@@ -19,6 +19,8 @@ import serial
 serialDevFile = 'COM3' # Andre's windows port
 ser=serial.Serial(serialDevFile, 9600, timeout=0)
 
+score_char = bytes('s', encoding="UTF-8")
+
 delay = 0.1
 
 # Score
@@ -111,20 +113,26 @@ while True:
     # reads serial in binary, decodes from binary literal to utf-8 and strips trailing whitespace
     # this ensures only one character is read and compared to the switch/case statement
 
-    joystick_position = ser.readline().decode('UTF-8').rstrip()
-  
-    match joystick_position:
-        case 'w':
-            go_up()
-        case "s":
-            go_down()
-        case "a":
-            go_left()
-        case "d":
-            go_right()
-        case _:
-            # do nothing otherwise
-            pass
+    #   CONOR NOTES:
+    #   Using ser.readline.decode() will occasionally result in error if 
+    try : 
+        joystick_position = ser.readline().decode('UTF-8').rstrip()
+
+        match joystick_position:
+            case 'w':
+                go_up()
+            case "s":
+                go_down()
+            case "a":
+                go_left()
+            case "d":
+                go_right()
+            case _:
+                # do nothing otherwise
+                pass
+    except:
+        # Clear bad bytes
+        ser.read_all()
 
     # TODO: notes by Andre
     #   probably a better way to flush any data in buffer after first character read..
@@ -177,7 +185,7 @@ while True:
 
         pen.clear()
         pen.write("Score: {}  High Score: {}  P/A: {}".format(score, high_score, ppa), align="center", font=("Courier", 24, "normal")) 
-
+        
 
     # Check for a collision with the food
     if head.distance(food) < 20:
@@ -210,7 +218,11 @@ while True:
             high_score = score
         
         pen.clear()
-        pen.write("Score: {}  High Score: {}  P/A: {}".format(score, high_score, ppa), align="center", font=("Courier", 24, "normal")) 
+        pen.write("Score: {}  High Score: {}  P/A: {}".format(score, high_score, ppa), align="center", font=("Courier", 24, "normal"))
+        
+        #New code by Conor
+        ser.write(score_char)
+
 
     # Move the end segments first in reverse order
     for index in range(len(segments)-1, 0, -1):
