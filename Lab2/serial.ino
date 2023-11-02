@@ -33,6 +33,7 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
+  /************************ ADDED BY CONOR - BEGIN ************************/
   //Recieve apple eaten flag from snake.py
   if (Serial.available() > 0) {
     // read the incoming byte:
@@ -56,6 +57,9 @@ void loop() {
       buzzer_active = false;
     }
   }
+  /************************ ADDED BY CONOR - END ************************/
+
+  /************************ ADDED BY ANDRE - BEGIN ************************/
 
   // Read joystick values and prevent repeated output
   js_x_dir = analogRead(joystick_x);
@@ -77,4 +81,6 @@ void loop() {
     prev_dir = curr_dir;
     Serial.println(curr_dir);
   }
+  /************************ ADDED BY ANDRE - END ************************/
+
 }

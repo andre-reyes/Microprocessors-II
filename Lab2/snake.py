@@ -134,21 +134,7 @@ while True:
         # Clear bad bytes
         ser.read_all()
 
-
-
     # ************************ ADDED BY ANDRE - END ************************
-
-    # TODO: notes by Prof. Luo
-    # you need to add your code to read control information from serial port
-    # then use that information to set head.direction
-    # For example, 
-    # if control_information == 'w':
-    #     head.direction = "up"
-    # elif control_information == 's':
-    #     head.direction = "down"
-    # elif ......
-    # COMPLETED for joystick - Andre
-    
 
 
     # Check for a collision with the border
@@ -202,7 +188,7 @@ while True:
         pen.clear()
         pen.write("Score: {}  High Score: {}  P/A: {}".format(score, high_score, ppa), align="center", font=("Courier", 24, "normal"))
         
-        #New code by Conor - Apple has been eaten flag
+        # ************************ ADDED BY CONOR - APPLE FLAG ************************
         ser.write(score_char)
 
 
