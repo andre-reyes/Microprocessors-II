@@ -5,7 +5,7 @@
 #define joystick_y A1
 #define BUZZER_PIN 7
 #define SCORE_CHAR 's'
-#define TICKS_TIL_TIME_OUT 2000
+#define TICKS_TIL_TIME_OUT 1000
 #define ANALOG_RANGE 1024 // general range of the analog input of arduino
 
 int js_resting_threshold = ANALOG_RANGE/4; // "deadzone" around joystick at rest, 25% all around
@@ -50,12 +50,12 @@ void loop() {
   if (buzzer_active) {
       buzzer_ticks ++;
 
-      if (buzzer_ticks > TICKS_TIL_TIME_OUT) {
-        digitalWrite(BUZZER_PIN, LOW);
-        buzzer_ticks = 0;
-        buzzer_active = false;
-      }
+    if (buzzer_ticks > TICKS_TIL_TIME_OUT) {
+      digitalWrite(BUZZER_PIN, LOW);
+      buzzer_ticks = 0;
+      buzzer_active = false;
     }
+  }
 
   // Read joystick values and prevent repeated output
   js_x_dir = analogRead(joystick_x);
