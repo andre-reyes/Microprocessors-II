@@ -1,14 +1,13 @@
-// Andre Reyes, Conor Duston and Harrington Idahosa modified for Lab 2 - joystick/gyro comm. 
-// w/arduino of EECE.4520/5520
-// 11/1/2023
+//  Andre Reyes, Conor Duston and Harrington Idahosa modified for Lab 2 - joystick/gyro comm. 
+//  w/arduino of EECE.4520/5520
+//  11/1/2023
 
-// Using the elegoo example scketch as a base for MPU-6050
-//  Example Sketch -Gyro from www.elegoo.com used as a base for gyro implementation
-
-
-
-// Start of Serial read: reads if snake ate apple from snake.py
-// and write: sends joystick curr_dir to snake.py
+//  Using the elegoo example scketch as a base for MPU-6050
+//  Modified Example Sketches from www.elegoo.com used as a base for 
+//  gyro implementation
+//  serial-rw.ino used as a start to communication with snake.py
+//  and modified for the joystick commuication for this lab
+\
 #include <Wire.h> // needed for serial commmunication with gyro
 
 #define joystick_x A0
@@ -18,7 +17,7 @@
 #define TICKS_TIL_TIME_OUT 1000
 #define ANALOG_RANGE 1024 // general range of the analog input of arduino
 
-//gyro
+// gyro variables
 const int MPU_addr = 0x68; // I2C address of the MPU-6050
 int16_t GyX, GyY;
 int minVal = -2000;
@@ -27,7 +26,7 @@ double gyro_x;
 double gyro_y;
 int sensitivity = 2;
 
-//joystick
+// joystick variables
 int js_resting_threshold = ANALOG_RANGE/4; // "deadzone" around joystick at rest, 25% all around
 int js_center = ANALOG_RANGE/2; // at rest joystick hovers around 500
 int js_x_dir = 0; // x value of joystick (left: -1024 to -750, right: 750 to 1024)
@@ -35,7 +34,7 @@ int js_y_dir = 0; // y value of joystick (down: -1024 to -750, up: 750 to 1024)
 char curr_dir = "";  // current direction
 char prev_dir = ""; // previous direction
 
-//buzzer
+// buzzer variables
 unsigned int incomingByte = 0; 
 unsigned int buzzer_ticks = 0;
 bool buzzer_active = false;
@@ -43,7 +42,7 @@ bool buzzer_active = false;
 
 
 void setup() {
-  //set up wire comm. with gyro of MPU-6050
+  // set up wire comm. with MPU-6050
   Wire.begin();
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x6B); // PWR_MGMT_1 register
@@ -104,7 +103,7 @@ void loop() {
 
 
   /************************ ADDED BY ANDRE - BEGIN ************************/
-  // harry: Read joystick values and prevent repeated output
+  //Read joystick values and prevent repeated output
   js_x_dir = analogRead(joystick_x);
   js_y_dir = analogRead(joystick_y);
 
