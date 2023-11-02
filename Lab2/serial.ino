@@ -14,7 +14,7 @@
 #define joystick_y A1
 #define BUZZER_PIN 7
 #define SCORE_CHAR 's'
-#define TICKS_TIL_TIME_OUT 1000
+#define TICKS_TIL_TIME_OUT 500
 #define ANALOG_RANGE 1024 // general range of the analog input of arduino
 
 // gyro variables
