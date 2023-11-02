@@ -114,7 +114,7 @@ while True:
     # this ensures only one character is read and compared to the switch/case statement
 
     #   CONOR NOTES:
-    #   Using ser.readline.decode() will occasionally result in error if 
+    #   Using ser.readline.decode() will occasionally result in error, using try/except to avoid
     try : 
         arduino_input = ser.readline().decode('UTF-8').rstrip()
 
@@ -133,19 +133,6 @@ while True:
     except:
         # Clear bad bytes
         ser.read_all()
-
-    # TODO: notes by Andre
-    #   probably a better way to flush any data in buffer after first character read..
-    #   This is just the first method that worked
-    #
-    #   this next statement basically makes it so that it will load ALL leftover buffer to remove it
-    #   from the queue
-    #  
-    #   otherwise without this the arduino_input will read dupes in buffer one by one
-    #   alternative idea is to modify arduino code to ensure only one input is sent at a time, especially
-    #   if it is the same direction.
-    if ser.in_waiting:
-        ser.read_all() 
 
 
 
@@ -190,11 +177,6 @@ while True:
     # Check for a collision with the food
     if head.distance(food) < 20:
 
-        # TODO: notes by Prof. Luo
-        # you need to send a flag to Arduino indicating an apple is eaten
-        # so that the Arduino will beep the buzzer
-        # Hint: refer to the example at Serial-RW/pyserial-test.py
-
         # Move the food to a random spot
         x = random.randint(-290, 290)
         y = random.randint(-290, 290)
@@ -220,7 +202,7 @@ while True:
         pen.clear()
         pen.write("Score: {}  High Score: {}  P/A: {}".format(score, high_score, ppa), align="center", font=("Courier", 24, "normal"))
         
-        #New code by Conor
+        #New code by Conor - Apple has been eaten flag
         ser.write(score_char)
 
 
