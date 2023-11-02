@@ -111,9 +111,9 @@ while True:
     # reads serial in binary, decodes from binary literal to utf-8 and strips trailing whitespace
     # this ensures only one character is read and compared to the switch/case statement
 
-    joystick_position = ser.readline().decode('UTF-8').rstrip()
+    arduino_input = ser.readline().decode('UTF-8').rstrip()
   
-    match joystick_position:
+    match arduino_input:
         case 'w':
             go_up()
         case "s":
@@ -133,7 +133,7 @@ while True:
     #   this next statement basically makes it so that it will load ALL leftover buffer to remove it
     #   from the queue
     #  
-    #   otherwise without this the joystick_position will read dupes in buffer one by one
+    #   otherwise without this the arduino_input will read dupes in buffer one by one
     #   alternative idea is to modify arduino code to ensure only one input is sent at a time, especially
     #   if it is the same direction.
     if ser.in_waiting:
