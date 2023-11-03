@@ -128,7 +128,7 @@ while True:
             case "d":
                 go_right()
             case _:
-                # do nothing otherwise
+                # do nothing
                 pass
     except:
         # Clear bad bytes

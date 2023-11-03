@@ -15,7 +15,7 @@
 #define BUZZER_PIN 7
 #define SCORE_CHAR 's'
 #define TICKS_TIL_TIME_OUT 500
-#define ANALOG_RANGE 1024 // general range of the analog input of arduino
+#define ANALOG_RANGE 1024 // range of the analog input of arduino
 
 // gyro variables
 const int MPU_addr = 0x68; // I2C address of the MPU-6050
@@ -53,12 +53,12 @@ void setup() {
   pinMode(joystick_x, INPUT);
   pinMode(joystick_y, INPUT);
   pinMode(BUZZER_PIN, OUTPUT);
-  digitalWrite(BUZZER_PIN, LOW);   // turn the LED on (HIGH is the voltage level)
+  digitalWrite(BUZZER_PIN, LOW);   
   
   Serial.begin(9600);
 }
 
-// the loop routine runs over and over again forever:
+
 void loop() {
 
   /************************ ADDED BY HARRY - BEGIN ************************/
@@ -76,7 +76,7 @@ void loop() {
 
 
   /************************ ADDED BY CONOR - BEGIN ************************/
-  //Recieve apple eaten flag from snake.py
+  // Recieve apple eaten flag from snake.py
   if (Serial.available() > 0) {
     // read the incoming byte:
     incomingByte = Serial.read();
@@ -103,11 +103,11 @@ void loop() {
 
 
   /************************ ADDED BY ANDRE - BEGIN ************************/
-  //Read joystick values and prevent repeated output
+  // Read joystick values and prevent repeated output
   js_x_dir = analogRead(joystick_x);
   js_y_dir = analogRead(joystick_y);
 
-  //Andre, process direction output conditions
+  // Process direction output conditions
   if(js_y_dir - js_center > js_resting_threshold || gyro_x > sensitivity){
     curr_dir = 'w';
   }
