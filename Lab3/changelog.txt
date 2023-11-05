@@ -1,0 +1,2 @@
+11/5/23
+    -created initial circuit diagram/schematic, includes connections for rtc, motor, lcd
