@@ -17,6 +17,7 @@
        
   - rerouted L293D EN pin from always HIGH to Digital pin to control power to motor
 ### 11/10/23
+- reused timer1 interrupt code from lab1 using 1Hz signal instead
 - added functions to dynamically change rpm/dir
   - issue with rpm/dir char array not updating
     - changed dir to a char array[2][3] an array of 2 strings of buffer 3 each
@@ -24,5 +25,5 @@
     - changed rpm_display to follow the same logic as dir_display
         - removed switch case to change array value to accomplish this
         - used rpm enum to determine array string to display on lcd
-    - LCD Functions tested and complete, waiting for other modules to full test
-    - updated schematic with button to control motor direction
+- LCD Functions tested and complete, waiting for other modules to full test
+- updated schematic with button to control motor direction
