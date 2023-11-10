@@ -29,7 +29,8 @@ Mic. sound module       | 1
 
 ## Other Resources Used:
 - elegoo.com/download
+- https://docs.arduino.cc/hacking/hardware/PinMapping2560, pin mapping
+- https://www.baldengineer.com/arduino-lcd-display-tips.html, lcd refresh buffer
 - Arduino IDE Example sketches
-
 
 
