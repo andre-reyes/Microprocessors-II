@@ -25,6 +25,6 @@ This is a collection of the Labs required by the course By Professor Yan Luo in 
     - [ ] wire - [view schematic](Lab3/schematics/lab3-schematic.png)
     - [ ] sample sound and convert to digital values
     - [ ] use FFT library to detect peak freq.
-    - [ ] match peak freq to notes C4 (262Hz) & A4 (440Hz), max 2% error allowed, https://www.youtube.com/watch?v=rP0a7b9IXwU
+    - [ ] [match peak freq to notes C4 (262Hz) & A4 (440Hz), max 2% error allowed](https://www.youtube.com/watch?v=rP0a7b9IXwU)
       - [ ] increase fan speed with C4
       - [ ] decrease fan speed with A4
