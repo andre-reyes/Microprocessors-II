@@ -9,9 +9,10 @@ This is a collection of the Labs required by the course By Professor Yan Luo in 
 - [ ] [Lab 3](Lab3)
   - [ ] [DC Motor control, truth table located in datasheets](Lab3/datasheets/TIL293D.PDF)
     - [ ] Wire - [view schematic](Lab3/schematics/lab3-schematic.png)
-    - [ ] to test: use buttons/serial input before implementing sound sensor
     - [ ] control speed with digital inputs
     - [ ] control direction with digital inputs
+    - [ ] to test: use buttons/serial input before implementing sound sensor
+    - [ ] turn on 30 seconds at start of minute OR time.second == 0
   - [ ] [LCD Display](Lab3/datasheets/Lesson%2028%20LCD%20Display/) (Andre)
     - [x] wire - [view schematic](Lab3/schematics/lab3-schematic.png)
     - [x] display time
