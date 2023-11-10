@@ -4,12 +4,14 @@
 
 ## Folder Structure
 ```
-****insertnamehere****.ino          Arduino program
-changelog.txt               record of changes made with dates
-README.md
+changelog.md                    record of changes made with dates
+README.md                       lab description
+motor_control/
+    motor_control.ino           Arduino program
 schematics/
-    lab3-schematic.png       circuit schematic design using fritzing
-    lab3-schematic.fzz       .fzz files used with fritzing (ver. 1.0.1)
+    lab3-schematic.png          circuit schematic design using fritzing
+    lab3-schematic.pdf
+    lab3-schematic.fzz          .fzz files used with fritzing (ver. 1.0.1)
 
 ```
 
