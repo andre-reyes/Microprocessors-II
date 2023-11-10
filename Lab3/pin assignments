@@ -1,3 +1,9 @@
 // lcd pins
 const int v0 = 5, rs = 6, en = 7, d4 = 8, d5 = 9, d6 = 10, d7 = 11;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+//motor pins
+const int motor_pin_a = 2, motor_pin_b = 3;
+//mic module pins
+const int mic_digital = 33, 
+const int mic_analog = 82; // or A15 (82-97 == A15-A0)

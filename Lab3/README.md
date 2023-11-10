@@ -5,9 +5,11 @@
 ## Folder Structure
 ```
 ****insertnamehere****.ino          Arduino program
-Schematic/
+changelog.txt               record of changes made with dates
+README.md
+schematics/
     lab3-schematic.png       circuit schematic design using fritzing
-    lab3-schematic.fzz       .fzz files used with fritzing (ver. 1.0.1) for                        schematic
+    lab3-schematic.fzz       .fzz files used with fritzing (ver. 1.0.1)
 
 ```
 
