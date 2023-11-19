@@ -9,20 +9,20 @@ RTCDateTime time;
 
 //Motor state enum to switch states (i.e. rpm = full)
 enum motor_speed{zero, half, three_quarter, full};
-motor_speed rpm = zero; //default in off state
+motor_speed rpm = zero; //default: off state
 
 //LCD interface pins
 const int v0 = 5, rs = 6, en = 7, d4 = 8, d5 = 9, d6 = 10, d7 = 11;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
-char line0[17];      //Top line buffer on LCD
-char line1[17];      //Bottom line Buffer on LCD
-char rpm_display[4][5] = {"0", "1/2", "3/4", "Full"}; //Display string for rpm on LCD
-char dir_display[2][3] = {"C", "CC"}; //Display string for direction on LCD
+char line0[17];                                         //Top line buffer on LCD
+char line1[17];                                         //Bottom line Buffer on LCD
+char rpm_display[4][5] = {"0", "1/2", "3/4", "Full"};   //Display string for rpm on LCD
+char dir_display[2][3] = {"C", "CC"};                   //Display string for direction on LCD
 
 //Flags
 volatile bool updateFlag = false; //Timer1 flag to update display/motor
-volatile bool dir = false; // direction flag 0 == "C" 1 == "CC"
-volatile byte button_pin = 37; //TODO: placeholder pin assignment
+volatile bool dir = false;        // direction flag 0 == "C" 1 == "CC"
+volatile byte button_pin = 37;    //button pin assignment
 
 //Declare functions
 void updateDisplay();
@@ -43,14 +43,14 @@ void setup() {
 
   //set up button interrupt
   pinMode(button_pin, INPUT);
-  attachInterrupt(digitalPinToInterrupt(button_pin), changeDir, RISING); //initiates button interrupt (pin to watch for interrupt, function to execute on interrupt, when interrupt should trigger[i.e. rising, falling, high, low])
+  attachInterrupt(digitalPinToInterrupt(button_pin), changeDir, RISING); 
   
-  //set timer1 interrupt at 1Hz
+  //set timer1 interrupt at 1Hz, reused from Lab 1
   cli();
   TCCR1A = 0;
   TCCR1B = 0;
   TCNT1  = 0;
-  OCR1A = 15624; // 1Hz cycle == 1 sec
+  OCR1A = 15624; 
   TCCR1B |= (1 << WGM12);
   TCCR1B |= (1 << CS12) | (1 << CS10);  
   TIMSK1 |= (1 << OCIE1A);
