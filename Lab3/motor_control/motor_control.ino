@@ -58,6 +58,8 @@ void setup() {
   //set up button interrupt
   pinMode(button_pin, INPUT);
   attachInterrupt(digitalPinToInterrupt(button_pin), changeDir, RISING);
+  //Setup direction of motor
+  updateDirection();
 
   //set timer1 interrupt at 1Hz, reused from Lab 1
   cli();
@@ -69,13 +71,20 @@ void setup() {
   TCCR1B |= (1 << CS12) | (1 << CS10);
   TIMSK1 |= (1 << OCIE1A);
   sei();
+  
 }
 
-
+//Updates
+//Speed - called when valid note is read
+//Direction - called when direction button changed
+//Display - Speed, Direction, or time changed
 void loop() {
+  
+  //Code for speed updates
+  updateSpeed();
+  
   if (updateFlag) {
     time = clock.getDateTime();
-    updateSpeed();
     updateDisplay();
     updateFlag = false;
   }
@@ -113,9 +122,12 @@ void updateSpeed() {
     case zero:
     default:
       // Fast stop + PWM low
-      digitalWrite(ENABLE, LOW);
       digitalWrite(COUNTERCLOCKWISE, LOW);
       digitalWrite(CLOCKWISE, LOW);
+
+      digitalWrite(ENABLE, LOW);
+      //Reset direction
+      updateDirection();
       break;
   }
 }
@@ -129,7 +141,6 @@ void updateDirection() {
     digitalWrite(CLOCKWISE, HIGH);
     digitalWrite(COUNTERCLOCKWISE, LOW);
   }
-
 }
 
 void getSpeed() {
@@ -149,4 +160,5 @@ ISR(TIMER1_COMPA_vect) {
 void changeDir() {
   CCW ^= 1;
   updateDirection();
+  updateFlag = true;
 }

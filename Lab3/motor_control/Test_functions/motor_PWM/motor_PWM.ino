@@ -11,7 +11,7 @@
 
 int itteration = 0;
 
-int8_t motor_state = 0;
+volatile int8_t motor_state = 0;
 int8_t max_state = 3;
 
 void updateMotor();
@@ -27,30 +27,28 @@ void setup() {
   digitalWrite(FOWARD, HIGH);
   digitalWrite(BACKWARD, LOW);
   Serial.begin(9600);
+
+  //set timer1 interrupt at 1Hz, reused from Lab 1
+  cli();
+  TCCR1A = 0;
+  TCCR1B = 0;
+  TCNT1 = 0;
+  OCR1A = 15624;
+  TCCR1B |= (1 << WGM12);
+  TCCR1B |= (1 << CS12) | (1 << CS10);
+  TIMSK1 |= (1 << OCIE1A);
+  sei();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  updateMotor();
+  
   
 }
-
-void updateMotor(){
-  // TODO: update actual motor dir and speed, truth table in L293D datasheet 
-  getSpeed();
-  
-}
-
-void getSpeed(){
-  if (itteration == MAX_ITTER) {
-    itteration = 0;
-    motor_state = (motor_state + 1) % (max_state + 1);
-    Serial.println("Max itterations reached");
-    setSpeed();
-
-  } else {
-    itteration ++;
-  }
+//**Interupt**//
+ISR(TIMER1_COMPA_vect) {
+  motor_state = (motor_state + 1) % (max_state + 1);
+  setSpeed();
 }
 
 void setSpeed () {
@@ -63,22 +61,22 @@ void setSpeed () {
       //Then set speed to half
       analogWrite(ENABLE, HALF_SPEED);
       Serial.println("Set to 1/2 Speed");
-      delay(20000);
+      
       break;
     case 2:
       analogWrite(ENABLE, THREE_FOURTHS_SPEED);
       Serial.println("Set to 3/4 Speed");
-      delay(1000);
+      
       break;
     case 3:
       digitalWrite(ENABLE, HIGH);
       Serial.println("Set to full Speed");
-      delay(1000);
       break;
     case 0:
     default:
       digitalWrite(ENABLE, LOW);
       Serial.println("Turned off");
-      delay(1000);
+      
+      
   }
 }
