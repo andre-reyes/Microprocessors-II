@@ -31,7 +31,7 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 char line0[17];                                          //Top line buffer on LCD
 char line1[17];                                          //Bottom line Buffer on LCD
 char rpm_display[4][5] = { "0", "1/2", "3/4", "Full" };  //Display string for rpm on LCD
-char dir_display[2][3] = { "C", "CC" };                  //Display string for direction on LCD
+char dir_display[2][3] = { "CC", "C" };                  //Display string for direction on LCD
 
 //Flags
 volatile bool updateFlag = false;  //Timer1 flag to update display/motor
@@ -60,7 +60,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(button_pin), changeDir, RISING);
 
   //Setup direction of motor
-  updateDirection(clockwise);
+  updateDirection();
 
   //set timer1 interrupt at 1Hz, reused from Lab 1
   cli();
@@ -148,7 +148,7 @@ void getSpeed() {
   //TODO: insert sound module function here to be used in updateMotor
   //if C4 then increase else if A4 decrease, else keep current rpm
   //set rpm = zero, half, three_quarter or full
-  rpm = half;
+  rpm = three_quarter;
 }
 
 
