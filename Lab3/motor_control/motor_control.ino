@@ -17,9 +17,9 @@ enum motor_speed { zero,
 motor_speed rpm = zero;  //default: off state
 
 // Motor pins
-#define CLOCKWISE 2
-#define COUNTERCLOCKWISE 3
-#define ENABLE 4
+#define CLOCKWISE_PIN 2
+#define COUNTERCLOCKWISE_PIN 3
+#define ENABLE_PIN 4
 
 //PWM values - only needed for 1/2 and 3/4, off and full are digital
 #define HALF_SPEED 128
@@ -35,7 +35,7 @@ char dir_display[2][3] = { "C", "CC" };                  //Display string for di
 
 //Flags
 volatile bool updateFlag = false;  //Timer1 flag to update display/motor
-volatile bool CCW = false;         // direction flag 0 == "C" 1 == "CC"
+volatile bool clockwise = true;         // direction flag 0 == "C" 1 == "CC"
 volatile byte button_pin = 37;     //button pin assignment
 
 //Declare functions
@@ -58,8 +58,9 @@ void setup() {
   //set up button interrupt
   pinMode(button_pin, INPUT);
   attachInterrupt(digitalPinToInterrupt(button_pin), changeDir, RISING);
+
   //Setup direction of motor
-  updateDirection();
+  updateDirection(clockwise);
 
   //set timer1 interrupt at 1Hz, reused from Lab 1
   cli();
@@ -79,12 +80,11 @@ void setup() {
 //Direction - called when direction button changed
 //Display - Speed, Direction, or time changed
 void loop() {
-  
-  //Code for speed updates
-  updateSpeed();
-  
+    
   if (updateFlag) {
     time = clock.getDateTime();
+    getSpeed();
+    updateSpeed();
     updateDisplay();
     updateFlag = false;
   }
@@ -92,54 +92,54 @@ void loop() {
 
 //****************Functions*********************//
 void updateDisplay() {
-  sprintf(line0, "DIR: %-2s RPM:%4s", dir_display[CCW], rpm_display[rpm]);
+  sprintf(line0, "DIR: %-2s RPM:%4s", dir_display[clockwise], rpm_display[rpm]);
   sprintf(line1, "    %02d:%02d:%02d", time.hour, time.minute, time.second);  //sprintf: %[flags][width][.precision][length]specifier
   lcd.setCursor(0, 0);
   lcd.print(line0);
   lcd.setCursor(0, 1);
   lcd.print(line1);
 }
-
-short int motor_state = 0;
-short int max_state = 0;
+//TODO: remove these lines? @conor
+// short int motor_state = 0;
+// short int max_state = 0;
 
 void updateSpeed() {
   // TODO: update actual motor CCW and speed, truth table in L293D datasheet
   switch (rpm) {
+    case full:
+      digitalWrite(ENABLE_PIN, HIGH);
+      break;
     case half:
       //Overcome friction.
       //This does not always work 100% of time, just tap fan if it does not work
-      digitalWrite(ENABLE, HIGH);
+      digitalWrite(ENABLE_PIN, HIGH); //FIXME: motor turned on to 100% and then half, maybe remove this?
       //Set speed to half
-      analogWrite(ENABLE, HALF_SPEED);
+      analogWrite(ENABLE_PIN, HALF_SPEED);
       break;
     case three_quarter:
-      analogWrite(ENABLE, THREE_FOURTHS_SPEED);
-      break;
-    case full:
-      digitalWrite(ENABLE, HIGH);
+      analogWrite(ENABLE_PIN, THREE_FOURTHS_SPEED);
       break;
     case zero:
-    default:
+      //FIXME: rpm, default to zero at start
       // Fast stop + PWM low
-      digitalWrite(COUNTERCLOCKWISE, LOW);
-      digitalWrite(CLOCKWISE, LOW);
+      digitalWrite(COUNTERCLOCKWISE_PIN, LOW);
+      digitalWrite(CLOCKWISE_PIN, LOW);
 
-      digitalWrite(ENABLE, LOW);
+      digitalWrite(ENABLE_PIN, LOW);
       //Reset direction
-      updateDirection();
+      updateDirection(); //FIXME: direction should be called only when button pressed otherwise it's gllobal and should stay the same
       break;
   }
 }
 
 void updateDirection() {
-  
-  if(CCW) {
-    digitalWrite(CLOCKWISE, LOW);
-    digitalWrite(COUNTERCLOCKWISE, HIGH);
+  //TODO: maybe turn off before changing direction if any issues occur
+  if(!clockwise) {
+    digitalWrite(CLOCKWISE_PIN, LOW);
+    digitalWrite(COUNTERCLOCKWISE_PIN, HIGH);
   } else {
-    digitalWrite(CLOCKWISE, HIGH);
-    digitalWrite(COUNTERCLOCKWISE, LOW);
+    digitalWrite(CLOCKWISE_PIN, HIGH);
+    digitalWrite(COUNTERCLOCKWISE_PIN, LOW);
   }
 }
 
@@ -148,7 +148,7 @@ void getSpeed() {
   //TODO: insert sound module function here to be used in updateMotor
   //if C4 then increase else if A4 decrease, else keep current rpm
   //set rpm = zero, half, three_quarter or full
-  rpm = three_quarter;
+  rpm = half;
 }
 
 
@@ -158,7 +158,7 @@ ISR(TIMER1_COMPA_vect) {
 }
 
 void changeDir() {
-  CCW ^= 1;
+  clockwise ^= 1;
   updateDirection();
-  updateFlag = true;
+  updateFlag = true;//FIXME: will be called with isr timer every second
 }

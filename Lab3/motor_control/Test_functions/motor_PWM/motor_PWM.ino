@@ -22,7 +22,7 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(FOWARD, OUTPUT);
   pinMode(BACKWARD, OUTPUT);
-  pinMode(ENABLE, OUTPUT);
+  pinMode(ENABLE_PIN, OUTPUT);
 
   digitalWrite(FOWARD, HIGH);
   digitalWrite(BACKWARD, LOW);
@@ -56,25 +56,25 @@ void setSpeed () {
   switch (motor_state) {
     case 1:
       //Overcome friction
-      digitalWrite(ENABLE, HIGH);
+      digitalWrite(ENABLE_PIN, HIGH);
       
       //Then set speed to half
-      analogWrite(ENABLE, HALF_SPEED);
+      analogWrite(ENABLE_PIN, HALF_SPEED);
       Serial.println("Set to 1/2 Speed");
       
       break;
     case 2:
-      analogWrite(ENABLE, THREE_FOURTHS_SPEED);
+      analogWrite(ENABLE_PIN, THREE_FOURTHS_SPEED);
       Serial.println("Set to 3/4 Speed");
       
       break;
     case 3:
-      digitalWrite(ENABLE, HIGH);
+      digitalWrite(ENABLE_PIN, HIGH);
       Serial.println("Set to full Speed");
       break;
     case 0:
     default:
-      digitalWrite(ENABLE, LOW);
+      digitalWrite(ENABLE_PIN, LOW);
       Serial.println("Turned off");
       
       
