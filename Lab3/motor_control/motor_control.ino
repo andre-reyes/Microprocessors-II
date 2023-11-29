@@ -109,7 +109,7 @@ void updateSpeed() {
   // TODO: update actual motor CCW and speed, truth table in L293D datasheet
   switch (rpm) {
     case full:
-      digitalWrite(ENABLE_PIN, HIGH);
+      analogWrite(ENABLE_PIN, 255);
       break;
     case half:
       //Overcome friction.
@@ -150,7 +150,7 @@ void getSpeed() {
   //TODO: insert sound module function here to be used in updateMotor
   //if C4 then increase else if A4 decrease, else keep current rpm
   //set rpm = zero, half, three_quarter or full
-  rpm = half;
+  rpm = full;
 }
 
 
@@ -162,4 +162,5 @@ ISR(TIMER1_COMPA_vect) {
 void changeDir() {
   clockwise ^= 1;
   Serial.print(clockwise);
+  updateDirection();
 }
