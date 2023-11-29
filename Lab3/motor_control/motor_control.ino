@@ -26,12 +26,12 @@ motor_speed rpm = zero;  //default: off state
 #define THREE_FOURTHS_SPEED 192
 
 //LCD interface pins
-const int v0 = 5, rs = 6, en = 7, d4 = 8, d5 = 9, d6 = 10, d7 = 11;
+const uint8_t v0 = 5, rs = 6, en = 7, d4 = 8, d5 = 9, d6 = 10, d7 = 11;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 char line0[17];                                          //Top line buffer on LCD
 char line1[17];                                          //Bottom line Buffer on LCD
-char rpm_display[4][5] = { "0", "1/2", "3/4", "Full" };  //Display string for rpm on LCD
-char dir_display[2][3] = { "CC", "C" };                  //Display string for direction on LCD
+char rpm_display[4][5] = { "   0", " 1/2", " 3/4", "Full" };  //Display string for rpm on LCD
+char dir_display[2][3] = { " C", "CC" };                  //Display string for direction on LCD
 
 //Flags
 volatile bool updateFlag = false;  //Timer1 flag to update display/motor
@@ -41,7 +41,7 @@ volatile byte button_pin = 19;     //button pin assignment
 //Declare functions
 void updateDisplay();
 void updateSpeed();
-void updateDirection();
+void setMotorDir();
 void changeDir();
 
 // Main code starts here
@@ -62,7 +62,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(button_pin), changeDir, RISING);
 
   //Setup direction of motor
-  updateDirection();
+  setMotorDir();
 
   //set timer1 interrupt at 1Hz, reused from Lab 1
   cli();
@@ -82,7 +82,9 @@ void setup() {
 //Direction - called when direction button changed
 //Display - Speed, Direction, or time changed
 void loop() {
-    
+  
+ 
+  
   if (updateFlag) {
     time = clock.getDateTime();
     getSpeed();
@@ -95,26 +97,25 @@ void loop() {
 //****************Functions*********************//
 void updateDisplay() {
   sprintf(line0, "DIR: %-2s RPM:%4s", dir_display[clockwise], rpm_display[rpm]);
-  sprintf(line1, "    %02d:%02d:%02d", time.hour, time.minute, time.second);  //sprintf: %[flags][width][.precision][length]specifier
+  sprintf(line1, "    %02d:%02d:%02d    ", time.hour, time.minute, time.second);  //sprintf: %[flags][width][.precision][length]specifier
+  
   lcd.setCursor(0, 0);
   lcd.print(line0);
+  //Second row
   lcd.setCursor(0, 1);
   lcd.print(line1);
 }
-//TODO: remove these lines? @conor
-// short int motor_state = 0;
-// short int max_state = 0;
 
 void updateSpeed() {
-  // TODO: update actual motor CCW and speed, truth table in L293D datasheet
+  
   switch (rpm) {
     case full:
       analogWrite(ENABLE_PIN, 255);
       break;
     case half:
-      //Overcome friction.
+      //Overcome friction. Put full power to motor for split second to start it up
       //This does not always work 100% of time, just tap fan if it does not work
-      digitalWrite(ENABLE_PIN, HIGH); //FIXME: motor turned on to 100% and then half, maybe remove this?
+      digitalWrite(ENABLE_PIN, HIGH);
       //Set speed to half
       analogWrite(ENABLE_PIN, HALF_SPEED);
       break;
@@ -128,14 +129,14 @@ void updateSpeed() {
       digitalWrite(CLOCKWISE_PIN, LOW);
 
       digitalWrite(ENABLE_PIN, LOW);
-      //Reset direction
-      updateDirection(); //FIXME: direction should be called only when button pressed otherwise it's gllobal and should stay the same
+      //Reset direction pins so that motor will spin next update
+      setMotorDir();
       break;
   }
 }
 
-void updateDirection() {
-  //TODO: maybe turn off before changing direction if any issues occur
+void setMotorDir() {
+  //Turning off motor not required, can just switch direction by changing output polarity
   if(!clockwise) {
     digitalWrite(CLOCKWISE_PIN, LOW);
     digitalWrite(COUNTERCLOCKWISE_PIN, HIGH);
@@ -156,11 +157,14 @@ void getSpeed() {
 
 //****************Interrupts*********************//
 ISR(TIMER1_COMPA_vect) {
+  //Update display with time
   updateFlag = true;
 }
 
+//This occurs async
 void changeDir() {
   clockwise ^= 1;
   Serial.print(clockwise);
-  updateDirection();
+  setMotorDir();
+  updateFlag = true; // update display IMMEDIATLY with change in direction this tick - done through button press
 }
