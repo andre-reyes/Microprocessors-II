@@ -35,8 +35,8 @@ char dir_display[2][3] = { "CC", "C" };                  //Display string for di
 
 //Flags
 volatile bool updateFlag = false;  //Timer1 flag to update display/motor
-volatile bool clockwise = true;         // direction flag 0 == "C" 1 == "CC"
-volatile byte button_pin = 37;     //button pin assignment
+volatile bool clockwise = 1;         // direction flag 1 == "C" 0 == "CC"
+volatile byte button_pin = 19;     //button pin assignment
 
 //Declare functions
 void updateDisplay();
@@ -46,6 +46,8 @@ void changeDir();
 
 // Main code starts here
 void setup() {
+  Serial.begin(9600);
+  Serial.print("start");
   // set up LCD
   pinMode(v0, OUTPUT);
   analogWrite(v0, 100);
@@ -148,7 +150,7 @@ void getSpeed() {
   //TODO: insert sound module function here to be used in updateMotor
   //if C4 then increase else if A4 decrease, else keep current rpm
   //set rpm = zero, half, three_quarter or full
-  rpm = three_quarter;
+  rpm = half;
 }
 
 
@@ -159,6 +161,5 @@ ISR(TIMER1_COMPA_vect) {
 
 void changeDir() {
   clockwise ^= 1;
-  updateDirection();
-  updateFlag = true;//FIXME: will be called with isr timer every second
+  Serial.print(clockwise);
 }
