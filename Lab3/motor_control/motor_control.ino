@@ -49,8 +49,6 @@ unsigned long microSeconds;
 double vReal[SAMPLES];
 double vImag[SAMPLES];
 double peak = 0;
-int motor_state = 0; //start at zero
-int prev_motor_state; //start at zero
 
 //Declare functions
 void updateDisplay();
@@ -98,10 +96,9 @@ void setup() {
 //Direction - called when direction button changed
 //Display - Speed, Direction, or time changed
 void loop() {
+
+  getSpeed();
   
- 
-  
-    getSpeed();
   if (updateFlag) {
     time = clock.getDateTime();
     //TODO: insert something here or in getSpeed() to prevent stage skipping
@@ -184,32 +181,15 @@ void getSpeed() {
   peak = FFT.MajorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
 
   // Adjust the speed based on the detected note
-  if (peak >= 257.0 && peak <= 267.0 && motor_state > 0) {
+  if (peak >= 257.0 && peak <= 267.0 && rpm > zero) {
     // C4, decrease speed
-    motor_state--;
-  } else if (peak >= 430.0 && peak <= 450.0 && motor_state < 3) {
+    rpm = rpm - 1;
+  } else if (peak >= 430.0 && peak <= 450.0 && rpm < full) {
     // A4, increase speed
-    motor_state++;
-  }
-  
-
-  switch (motor_state){
-    case 0:
-      rpm = zero;
-      break;
-    case 1:
-      rpm = half;
-      break;
-    case 2:
-      rpm = three_quarter;
-      break;
-    case 3:
-      rpm = full;
-      break;
+    rpm = rpm + 1;
   }
   
 }
-
 
 //****************Interrupts*********************//
 ISR(TIMER1_COMPA_vect) {
