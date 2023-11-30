@@ -39,9 +39,9 @@ char rpm_display[4][5] = { "   0", " 1/2", " 3/4", "Full" };  //Display string f
 char dir_display[2][3] = { " C", "CC" };                  //Display string for direction on LCD
 
 //Flags
-volatile bool updateFlag = false;  //Timer1 flag to update display/motor
+volatile bool updateFlag = false;    //Timer1 flag to update display/motor
 volatile bool clockwise = 1;         // direction flag 1 == "C" 0 == "CC"
-volatile byte button_pin = 19;     //button pin assignment
+volatile byte button_pin = 19;       //button pin assignment
 
 //sound variables 
 unsigned int samplingPeriod;
@@ -51,11 +51,12 @@ double vImag[SAMPLES];
 double peak = 0;
 
 //Declare functions
-void updateDisplay();
-void updateSpeed();
-void setMotorDir();
-void changeDir();
-void getSpeed();
+void updateDisplay();           //outputs direction, rpm, time to lcd display
+void updateSpeed(double peak);  //updates rpm based on input from listenForPeak()
+void setMotorDir();             //Sets the direction using the pins for the L293D
+void changeDir();               //changes value of motor direction based on the ISR button flag
+double listenForPeak();         //returns peak sound value
+
 // Main code starts here
 void setup() {
  
@@ -97,12 +98,11 @@ void setup() {
 //Display - Speed, Direction, or time changed
 void loop() {
 
-  getSpeed();
+  double peak = listenForPeak();
   
   if (updateFlag) {
     time = clock.getDateTime();
-    //TODO: insert something here or in getSpeed() to prevent stage skipping
-    updateSpeed();
+    updateSpeed(peak);
     updateDisplay();
     updateFlag = false;
   }
@@ -113,15 +113,23 @@ void updateDisplay() {
   sprintf(line0, "DIR: %-2s RPM:%4s", dir_display[clockwise], rpm_display[rpm]);
   sprintf(line1, "    %02d:%02d:%02d    ", time.hour, time.minute, time.second);  //sprintf: %[flags][width][.precision][length]specifier
   
+  //first row
   lcd.setCursor(0, 0);
   lcd.print(line0);
+  
   //Second row
   lcd.setCursor(0, 1);
   lcd.print(line1);
 }
 
-void updateSpeed() {
-
+void updateSpeed(double peak) {
+  if (peak >= 257.0 && peak <= 267.0 && rpm > zero) {
+    // C4, decrease speed
+    rpm = rpm - 1;
+  } else if (peak >= 430.0 && peak <= 450.0 && rpm < full) {
+    // A4, increase speed
+    rpm = rpm + 1;
+  }
   switch (rpm) {
     case full:
       analogWrite(ENABLE_PIN, 255);
@@ -159,36 +167,25 @@ void setMotorDir() {
   }
 }
 
-void getSpeed() {
-
-  //TODO: insert sound module function here to be used in updateMotor
-  //if C4 then increase else if A4 decrease, else keep current rpm
-  //set rpm = zero, half, three_quarter or full
+double listenForPeak() {
+  //listen for raw values
   for (int i = 0; i < SAMPLES; i++) {
     microSeconds = micros();
     vReal[i] = analogRead(0);
     vImag[i] = 0;
 
-      //TODO: while loop is blocking, what's it for?
+    // while loop delay for raw data gathering time
     while (micros() < (microSeconds + samplingPeriod)) {
     }
   }
 
-
+  //calculate peakusing raw values
   FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
   FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
   FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
   peak = FFT.MajorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
 
-  // Adjust the speed based on the detected note
-  if (peak >= 257.0 && peak <= 267.0 && rpm > zero) {
-    // C4, decrease speed
-    rpm = rpm - 1;
-  } else if (peak >= 430.0 && peak <= 450.0 && rpm < full) {
-    // A4, increase speed
-    rpm = rpm + 1;
-  }
-  
+  return peak;
 }
 
 //****************Interrupts*********************//
@@ -197,9 +194,9 @@ ISR(TIMER1_COMPA_vect) {
   updateFlag = true;
 }
 
-//This occurs async
+//Button ISR to change direction of fan, this occurs async
 void changeDir() {
   clockwise ^= 1;
-  updateFlag = true; // update display IMMEDIATLY with change in direction this tick - done through button press
+  updateFlag = true; 
   setMotorDir();
 }

@@ -83,7 +83,7 @@ void loop() {
     
   if (updateFlag) {
     time = clock.getDateTime();
-    getSpeed();
+    listenForPeak();
     updateSpeed();
     updateDisplay();
     updateFlag = false;
@@ -143,7 +143,7 @@ void updateDirection() {
   }
 }
 
-void getSpeed() {
+void listenForPeak() {
 
   //TODO: insert sound module function here to be used in updateMotor
   //if C4 then increase else if A4 decrease, else keep current rpm
