@@ -29,7 +29,7 @@ motor_speed rpm;  //default: off state
 //sound module
 #define SAMPLES 128
 #define SAMPLING_FREQUENCY 1024
-
+#define MIC_PIN 0
 //LCD interface pins
 const uint8_t v0 = 5, rs = 6, en = 7, d4 = 8, d5 = 9, d6 = 10, d7 = 11;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
@@ -39,7 +39,9 @@ char rpm_display[4][5] = { "   0", " 1/2", " 3/4", "Full" };  //Display string f
 char dir_display[2][3] = { " C", "CC" };                  //Display string for direction on LCD
 
 //Flags
-volatile bool updateFlag = false;    //Timer1 flag to update display/motor
+volatile bool screenUpdateFlag = false;    //Flag to update display
+volatile bool timeUpdateFlag = false;    //Timer1 Flag to update the time shown on screen;          
+
 volatile bool clockwise = 1;         // direction flag 1 == "C" 0 == "CC"
 volatile byte button_pin = 19;       //button pin assignment
 
@@ -52,15 +54,18 @@ double peak = 0;
 
 //Declare functions
 void updateDisplay();           //outputs direction, rpm, time to lcd display
+
 void updateSpeed(double peak);  //updates rpm based on input from listenForPeak()
+
+void setMotorSpeed();           //Sets speed of motor based on RPM variable
 void setMotorDir();             //Sets the direction using the pins for the L293D
 void changeDir();               //changes value of motor direction based on the ISR button flag
+
 double listenForPeak();         //returns peak sound value
 
 // Main code starts here
 void setup() {
- Serial.begin(9600);
-
+  Serial.begin(9600);
   // set up LCD
   pinMode(v0, OUTPUT);
   analogWrite(v0, 100);
@@ -98,14 +103,18 @@ void setup() {
 //Direction - called when direction button changed
 //Display - Speed, Direction, or time changed
 void loop() {
-
+  //Query mic for peak
   double peak = listenForPeak();
-  
-  if (updateFlag) {
+  //Update speed as soon as peak arives
+  updateSpeed(peak);
+
+  if (timeUpdateFlag) {
     time = clock.getDateTime();
-    updateSpeed(peak);
+    timeUpdateFlag = false;
+  }
+  if (screenUpdateFlag) {
     updateDisplay();
-    updateFlag = false;
+    screenUpdateFlag = false;
   }
 }
 
@@ -127,10 +136,17 @@ void updateSpeed(double peak) {
   if (peak >= 257.0 && peak <= 267.0 && rpm > zero) {
     // C4, decrease speed
     rpm = rpm - 1;
+    setMotorSpeed();
+    screenUpdateFlag = true;
   } else if (peak >= 430.0 && peak <= 450.0 && rpm < full) {
     // A4, increase speed
     rpm = rpm + 1;
-  }
+    setMotorSpeed();
+    screenUpdateFlag = true;
+  }  
+}
+
+void setMotorSpeed() {
   switch (rpm) {
     case full:
     Serial.print(peak);
@@ -186,7 +202,7 @@ double listenForPeak() {
   //listen for raw values
   for (int i = 0; i < SAMPLES; i++) {
     microSeconds = micros();
-    vReal[i] = analogRead(0);
+    vReal[i] = analogRead(MIC_PIN);
     vImag[i] = 0;
 
     // while loop delay for raw data gathering time
@@ -206,12 +222,13 @@ double listenForPeak() {
 //****************Interrupts*********************//
 ISR(TIMER1_COMPA_vect) {
   //Update display with time
-  updateFlag = true;
+  timeUpdateFlag = true;
+  screenUpdateFlag = true;
 }
 
 //Button ISR to change direction of fan, this occurs async
 void changeDir() {
   clockwise ^= 1;
-  updateFlag = true; 
+  screenUpdateFlag = true; 
   setMotorDir();
 }
