@@ -21,7 +21,7 @@ motor_speed rpm;  //default: off state
 #define CLOCKWISE_PIN 2
 #define COUNTERCLOCKWISE_PIN 3
 #define ENABLE_PIN 4
-
+#define MIC_PIN 0
 //PWM values - only needed for 1/2 and 3/4, off and full are digital
 #define HALF_SPEED 128
 #define THREE_FOURTHS_SPEED 192
@@ -186,7 +186,7 @@ double listenForPeak() {
   //listen for raw values
   for (int i = 0; i < SAMPLES; i++) {
     microSeconds = micros();
-    vReal[i] = analogRead(0);
+    vReal[i] = analogRead(MIC_PIN);
     vImag[i] = 0;
 
     // while loop delay for raw data gathering time
