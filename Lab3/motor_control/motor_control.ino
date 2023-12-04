@@ -59,7 +59,8 @@ double listenForPeak();         //returns peak sound value
 
 // Main code starts here
 void setup() {
- 
+ Serial.begin(9600);
+
   // set up LCD
   pinMode(v0, OUTPUT);
   analogWrite(v0, 100);
@@ -132,19 +133,33 @@ void updateSpeed(double peak) {
   }
   switch (rpm) {
     case full:
-      analogWrite(ENABLE_PIN, 255);
+    Serial.print(peak);
+
+    Serial.println(" full");
+      digitalWrite(ENABLE_PIN, HIGH);
       break;
     case half:
+    Serial.print(peak);
+
+    Serial.println(" half");
+
       //Overcome friction. Put full power to motor for split second to start it up
       //This does not always work 100% of time, just tap fan if it does not work
-      digitalWrite(ENABLE_PIN, HIGH);
+      // digitalWrite(ENABLE_PIN, HIGH);
       //Set speed to half
       analogWrite(ENABLE_PIN, HALF_SPEED);
       break;
     case three_quarter:
+    Serial.print(peak);
+
+    Serial.println(" 3/4");
+
       analogWrite(ENABLE_PIN, THREE_FOURTHS_SPEED);
       break;
     case zero:
+    Serial.print(peak);
+    Serial.println(" zero");
+
       // Fast stop + PWM low
       digitalWrite(COUNTERCLOCKWISE_PIN, LOW);
       digitalWrite(CLOCKWISE_PIN, LOW);

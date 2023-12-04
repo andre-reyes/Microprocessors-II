@@ -7,14 +7,14 @@ This is a collection of the Labs required by the course By Professor Yan Luo in 
   - [x] Joystick (Andre)
   - [x] buzzer when eating apple (Conor)
   - [x] MPU-6060 (gyro only) to move (Harry)
-- [ ] [Lab 3](Lab3)
-  - [ ] [DC Motor control, truth table located in datasheets](Lab3/datasheets/TIL293D.PDF) (Conor)
-    - [ ] Wire - [view schematic](Lab3/schematics/lab3-schematic.pdf)
-    - [ ] control direction with button
-    - [ ] turn on 30 seconds at start of minute OR time.second == 0
-    - [ ] control rpm using pwm
-    - [ ] to test rpm: use buttons/serial input before implementing sound sensor
-    - [ ] control speed with digital inputs from sound sensor
+- [x] [Lab 3](Lab3)
+  - [x] [DC Motor control, truth table located in datasheets](Lab3/datasheets/TIL293D.PDF) (Conor)
+    - [x] Wire - [view schematic](Lab3/schematics/lab3-schematic.pdf)
+    - [x] control direction with button
+    - [x] turn on 30 seconds at start of minute OR time.second == 0
+    - [x] control rpm using pwm
+    - [x] to test rpm: use buttons/serial input before implementing sound sensor
+    - [x] control speed with digital inputs from sound sensor
   - [x] [LCD Display](Lab3/datasheets/Lesson%2028%20LCD%20Display/) (Andre)
     - [x] wire - [view schematic](Lab3/schematics/lab3-schematic.pdf)
     - [x] display time
@@ -24,10 +24,10 @@ This is a collection of the Labs required by the course By Professor Yan Luo in 
   - [x] [RTC module](Lab3/datasheets/Lesson%2033%20Real%20Time%20Clock%20Module/) (Andre)
     - [x] wire - [view schematic](Lab3/schematics/lab3-schematic.pdf)
     - [x] retrieve time
-  - [ ] [Sound sensor module](Lab3/datasheets/Lesson%2016%20Large%20Microphone%20Module/) (Harry)
-    - [ ] wire - [view schematic](Lab3/schematics/lab3-schematic.pdf)
-    - [ ] sample sound and convert to digital values
-    - [ ] use FFT library to detect peak freq.
-    - [ ] [match peak freq to notes C4 (262Hz) & A4 (440Hz), max 2% error allowed](https://www.youtube.com/watch?v=rP0a7b9IXwU)
-      - [ ] increase fan speed with C4
-      - [ ] decrease fan speed with A4
+  - [x] [Sound sensor module](Lab3/datasheets/Lesson%2016%20Large%20Microphone%20Module/) (Harry)
+    - [x] wire - [view schematic](Lab3/schematics/lab3-schematic.pdf)
+    - [x] sample sound and convert to digital values
+    - [x] use FFT library to detect peak freq.
+    - [x] [match peak freq to notes C4 (262Hz) & A4 (440Hz), max 2% error allowed](https://www.youtube.com/watch?v=rP0a7b9IXwU)
+      - [x] increase fan speed with C4
+      - [x] decrease fan speed with A4
