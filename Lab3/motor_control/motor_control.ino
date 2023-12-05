@@ -7,8 +7,8 @@
 // This sketch combines the functions of a DC motor, microphone and 
 // a real-time clock to ouput to an LCD. The microphone works together 
 // with a button to control the speed and direction of the motor. While  
-// this is happening the RTC is providing the time and update frequency 
-// for the LCD to dipslay the current state of the motor. 
+// this is happening, the RTC is providing the time and update frequency 
+// for the LCD to display the current state of the motor. 
 
 // Contribution definitions: 
 // Primary - Wrote most of the functionality and base of code snippet
