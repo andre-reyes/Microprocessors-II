@@ -10,8 +10,8 @@ This lab is to design a controller to control a fan driven by a DC motor. Your d
     motor_control/
         motor_control.ino           Arduino program
     schematics/
-        lab3-schematic.png          circuit schematic design using fritzing
-        lab3-schematic.pdf
+        lab3-breadboard.pdf         circuit schematic design using fritzing
+        lab3-schematic.pdf          breadboard layout for easier implementation
         lab3-schematic.fzz          .fzz files used with fritzing (ver. 1.0.1)
 
 ## Components Used
@@ -19,7 +19,7 @@ This lab is to design a controller to control a fan driven by a DC motor. Your d
 Component               | Quantity
 ---------               | :---------:
 Arduino ATMEGA 2560     | 1
-Power supply mopdule    | 1
+Power supply module     | 1
 DC Motor                | 1
 L293D                   | 1
 LCD                     | 1
@@ -30,7 +30,7 @@ Button                  | 1
 
 ## Other Resources Used
 
-- elegoo.com/download
+- [elegoo examples](https://www.elegoo.com/download)
 - [pin mapping](https://docs.arduino.cc/hacking/hardware/PinMapping2560)
 - [lcd refresh buffer](https://www.baldengineer.com/arduino-lcd-display-tips.html)
 - Arduino IDE Example sketches

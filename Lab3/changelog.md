@@ -1,6 +1,6 @@
 # Changelog
 
-This is a log of everything Andre did to implement LCD
+This is a log of everything Andre did to implement LCD as this was the base of the overall design.
 
 ## 11/5/23
 
