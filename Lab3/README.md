@@ -1,7 +1,7 @@
 
 # Lab 3 - Using Sensors to Control Motors
 
-This lab is to design a controller to control a fan driven by a DC motor. Your design needs to display the clock and the fan’s rotation direction and speed. You must use a timer interrupt. Your system will use sound sensor to detect music notes and control the speed of the motor.
+This lab is to design a controller to control a fan driven by a DC motor. Our design uses and LCD display to show the clock and the fan’s rotation direction and speed. Using a timer interrupt the system uses sound sensor to detect music notes and control the speed of the motor.
 
 ## Folder Structure
 
