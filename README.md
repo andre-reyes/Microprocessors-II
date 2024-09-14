@@ -1,6 +1,8 @@
 # Microprocessors II - Labs
 
-This is a collection of the Labs required by the course By Professor Yan Luo in the Fall of 2023 at UMass Lowell
+This is a collection of the Labs required by the course By Professor Yan Luo in the Fall of 2023 at UMass Lowell.
+
+Note: Circuit schematic design using [fritzing](https://fritzing.org/), an open source software.
 
 - [x] [Lab 1 - Traffic Light Controller](Lab1)
 - [x] [Lab 2](Lab2)
